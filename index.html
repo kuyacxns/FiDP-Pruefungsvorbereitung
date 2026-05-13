@@ -3229,6 +3229,13 @@ function LearningPlanView() {
         'IT-Sicherheit + Datenschutz (CIA, DSGVO, Hashverfahren) – 2 Wochen',
         'Wöchentlich 1× alte AP1-Aufgaben (Frühjahr 2025, Herbst 2025)',
       ],
+      resources: [
+        { title: 'IT-Berufe-Podcast – AP1-Episoden', url: 'https://it-berufe-podcast.de/' },
+        { title: 'Elektronik-Kompendium – Netzwerk & Hardware', url: 'https://www.elektronik-kompendium.de/' },
+        { title: 'subnetting.org – Subnetting interaktiv üben', url: 'https://www.subnetting.org/' },
+        { title: 'BSI – IT-Grundschutz & DSGVO', url: 'https://www.bsi.bund.de/' },
+        { title: 'BfDI – Datenschutz-Grundlagen', url: 'https://www.bfdi.bund.de/' },
+      ],
     },
     {
       title: 'Phase 2 · August – September 2026',
@@ -3242,6 +3249,13 @@ function LearningPlanView() {
         '4–6 vollständige AP1-Probeprüfungen unter Zeitdruck (90 Min.)',
         'Lernzettel: Eigene Zusammenfassung pro Thema (handschriftlich = besser)',
       ],
+      resources: [
+        { title: 'Stark-Verlag – AP1-Originalprüfungen FIDP', url: 'https://www.stark-verlag.de/' },
+        { title: 'U-Form – Prüfungsvorbereitung IT-Berufe', url: 'https://www.u-form.de/' },
+        { title: 'MyDigi Academy – FIDP Prüfungstrainer', url: 'https://mydigi.academy/pruefungsvorbereitung/fachinformatiker-daten-und-prozessanalyse/' },
+        { title: 'draw.io – UML-Diagramme kostenlos zeichnen', url: 'https://app.diagrams.net/' },
+        { title: 'WCAG 2.1 – Barrierefreiheit Referenz', url: 'https://www.w3.org/TR/WCAG21/' },
+      ],
     },
     {
       title: 'Phase 3 · Oktober 2026',
@@ -3252,6 +3266,11 @@ function LearningPlanView() {
         'Schwachstellen aus Probeprüfungen schließen',
         'Formelblatt & Cheatsheets (Subnetting, RAID, Verfügbarkeitsklassen) auswendig',
         '1 Tag vor Prüfung: nichts Neues mehr lernen – ausschlafen, ruhen',
+      ],
+      resources: [
+        { title: 'IHK Hamburg – Prüfungstermine & Anmeldung', url: 'https://www.hk24.de/' },
+        { title: 'IHK-AKA – Aktuelle Prüfungsnews', url: 'https://www.ihk-aka.de/' },
+        { title: 'Prüfungstrainer.de – Letzte Wiederholung', url: 'https://www.pruefungstrainer.de/' },
       ],
     },
     {
@@ -3267,6 +3286,15 @@ function LearningPlanView() {
         'NoSQL: MongoDB University Kurs (kostenlos)',
         'RAID, Backup, Verfügbarkeitsklassen',
       ],
+      resources: [
+        { title: 'Camunda Modeler – BPMN-Tool (kostenlos)', url: 'https://camunda.com/download/modeler/' },
+        { title: 'Camunda BPMN-Referenz', url: 'https://camunda.com/bpmn/reference/' },
+        { title: 'SQLZoo – interaktives SQL-Training', url: 'https://sqlzoo.net/' },
+        { title: 'datenbanken-verstehen.de – SQL & Normalformen', url: 'https://www.datenbanken-verstehen.de/' },
+        { title: 'MongoDB University – NoSQL Kurs (kostenlos)', url: 'https://learn.mongodb.com/' },
+        { title: 'Celonis Academy – Process Mining (kostenlos)', url: 'https://academy.celonis.com/' },
+        { title: 'Kimball Group – Data Warehouse Methodik', url: 'https://www.kimballgroup.com/' },
+      ],
     },
     {
       title: 'Phase 5 · März – April 2027',
@@ -3279,6 +3307,12 @@ function LearningPlanView() {
         'Nach Genehmigung: 40 h Projektdurchführung + Doku',
         'Wöchentlich Doku schreiben (nicht alles am Schluss!)',
       ],
+      resources: [
+        { title: 'Stefan Macke – Beispielanträge & Bewertungen', url: 'https://it-berufe-podcast.de/beispielantraege/' },
+        { title: 'Stefan Macke – Beispieldokumentationen', url: 'https://it-berufe-podcast.de/beispieldokumentationen/' },
+        { title: 'IHK Hamburg – Projektanträge einreichen', url: 'https://www.hk24.de/' },
+        { title: 'IT-Berufe-Podcast – Abschlussprojekt-Episoden', url: 'https://it-berufe-podcast.de/' },
+      ],
     },
     {
       title: 'Phase 6 · Mai – Juli 2027',
@@ -3290,6 +3324,12 @@ function LearningPlanView() {
         'WiSo (oft unterschätzt!): Arbeitsrecht, Sozialversicherung, Unternehmensformen',
         'Projektpräsentation 3–5× üben (vor Publikum, mit Stoppuhr)',
         'Fachgespräch-Vorbereitung: Standardfragen sammeln, eigene Antworten formulieren',
+      ],
+      resources: [
+        { title: 'Stark-Verlag – AP2-Originalprüfungen FIDP', url: 'https://www.stark-verlag.de/' },
+        { title: 'Westermann – Wirtschafts- und Sozialkunde', url: 'https://www.westermann.de/' },
+        { title: 'Stefan Macke – Beispielpräsentationen', url: 'https://it-berufe-podcast.de/beispielpraesentationen/' },
+        { title: 'Reddit r/Fachinformatiker – Prüfungsberichte', url: 'https://www.reddit.com/r/Fachinformatiker/' },
       ],
     },
   ];
@@ -3328,6 +3368,22 @@ function LearningPlanView() {
                     </li>
                   ))}
                 </ul>
+                {p.resources && p.resources.length > 0 && (
+                  <div className="mt-3 pt-3 border-t border-zinc-800/60">
+                    <p className="text-xs font-mono uppercase tracking-wider text-cyan-400 mb-2">Quellen</p>
+                    <ul className="space-y-1">
+                      {p.resources.map((r, ri) => (
+                        <li key={ri}>
+                          <a href={r.url} target="_blank" rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 text-xs text-zinc-400 hover:text-cyan-300 transition-colors group">
+                            <ExternalLink className="w-3 h-3 opacity-40 group-hover:opacity-100" />
+                            {r.title}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
           ))}
