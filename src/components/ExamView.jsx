@@ -4,6 +4,7 @@ import { ProgressBar } from './ProgressBar.jsx';
 import { AP1_TOPICS, AP2_PROZESS, AP2_DATEN, AP2_WISO } from '../data/index.js';
 import { drawExamQuestions, scoreExam } from '../lib/exam.js';
 import { questionId, recordAnswer } from '../lib/leitner.js';
+import { withStudyActivity } from '../lib/streak.js';
 
 const EXAM_CONFIGS = [
   {
@@ -57,7 +58,7 @@ export function ExamView({ progress, save }) {
       const qid = questionId(w.item.topicId, w.item.qIndex);
       questionStats[qid] = recordAnswer(questionStats[qid], false);
     }
-    save({ ...p, questionStats, lastStudyDate: new Date().toISOString() });
+    save(withStudyActivity({ ...p, questionStats }));
     setResult(r);
   };
 

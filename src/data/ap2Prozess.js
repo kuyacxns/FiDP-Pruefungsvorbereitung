@@ -226,7 +226,7 @@ export const AP2_PROZESS = [
     quiz: [
       {
         q: 'In einer Auftragsabwicklung beträgt die Bearbeitungszeit 45 Min., die Liegezeit zwischen Stationen 6 Stunden und die Transportzeit 15 Min. Wie hoch ist die Durchlaufzeit?',
-        options: ['45 Min.', '6 Std. 60 Min. = 7 Std.', 'Genau 6 Stunden', '7 Stunden 0 Min.'],
+        options: ['45 Min.', '6 Std. 45 Min.', 'Genau 6 Stunden', '7 Stunden 0 Min.'],
         correct: 3,
         explanation: 'DLZ = 45 Min. + 360 Min. + 15 Min. = 420 Min. = 7 Stunden.'
       },

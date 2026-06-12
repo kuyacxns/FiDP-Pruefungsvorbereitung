@@ -4,6 +4,7 @@ import { ProgressBar } from './ProgressBar.jsx';
 import { ALL_TOPICS } from '../data/index.js';
 import { getDueQuestions, questionId, recordAnswer } from '../lib/leitner.js';
 import { shuffle } from '../lib/shuffle.js';
+import { withStudyActivity } from '../lib/streak.js';
 
 export function ReviewView({ progress, save }) {
   // Session-Queue: einmal beim Start aus den fälligen Fragen gemischt.
@@ -30,14 +31,13 @@ export function ReviewView({ progress, save }) {
     const item = queue[current];
     const isCorrect = oIndex === item.question.correct;
     const qid = questionId(item.topicId, item.qIndex);
-    save({
+    save(withStudyActivity({
       ...progress,
       questionStats: {
         ...progress.questionStats,
         [qid]: recordAnswer(progress.questionStats[qid], isCorrect),
       },
-      lastStudyDate: new Date().toISOString(),
-    });
+    }));
     setResults((r) => [...r, isCorrect]);
   };
 

@@ -74,7 +74,7 @@ export default function App() {
       </header>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-        {tab === 'home' && <Dashboard progress={progress} reset={reset} totalTopics={totalTopics} onJumpTo={setTab} />}
+        {tab === 'home' && <Dashboard progress={progress} save={save} reset={reset} totalTopics={totalTopics} onJumpTo={setTab} />}
         {tab === 'review' && <ReviewView progress={progress} save={save} />}
         {tab === 'simulation' && <ExamView progress={progress} save={save} />}
         {tab === 'rechnen' && <CalcView />}

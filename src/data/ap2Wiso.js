@@ -345,7 +345,7 @@ export const AP2_WISO = [
       },
       {
         q: 'Ein Laptop hat einen Listenpreis von 1.000 € netto. Es gibt 10 % Rabatt. Wie hoch ist der Bruttorechnungsbetrag (19 % MwSt.)?',
-        options: ['1.071 €', '1.071,00 €', '900 € netto → 1.071 € brutto', '1.190 €'],
+        options: ['1.090 €', '900 € (ohne MwSt.)', '900 € netto → 1.071 € brutto', '1.190 €'],
         correct: 2,
         explanation: 'Rechnung: 1.000 € − 10 % Rabatt = 900 € netto. 900 € × 1,19 (MwSt. 19 %) = 1.071 € brutto. Häufige Falle: Rabatt immer vom Nettopreis abziehen, dann MwSt. aufschlagen. MwSt. gehört nicht zum Unternehmensertrag (Durchlaufposten ans Finanzamt).'
       },

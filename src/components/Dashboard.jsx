@@ -1,10 +1,36 @@
+import { useRef } from 'react';
 import { ProgressBar } from './ProgressBar.jsx';
-import { Trophy, Target, Zap, Award, Clock, AlertCircle, RotateCcw } from './Icons.jsx';
+import { Trophy, Target, Zap, Award, Clock, AlertCircle, RotateCcw, Flame, Download, Upload } from './Icons.jsx';
 import { ALL_TOPICS } from '../data/index.js';
 import { getDueQuestions } from '../lib/leitner.js';
+import { serializeProgress, parseImportedProgress } from '../lib/exportImport.js';
 
-export function Dashboard({ progress, reset, totalTopics, onJumpTo }) {
+export function Dashboard({ progress, save, reset, totalTopics, onJumpTo }) {
   const dueCount = getDueQuestions(progress.questionStats, ALL_TOPICS).length;
+  const fileInputRef = useRef(null);
+
+  const handleExport = () => {
+    const blob = new Blob([serializeProgress(progress)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `fidp-fortschritt-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImportFile = async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    const res = parseImportedProgress(await file.text(), ALL_TOPICS);
+    if (res.ok) {
+      save(res.progress);
+      alert('Fortschritt erfolgreich importiert.');
+    } else {
+      alert(`Import fehlgeschlagen: ${res.error}`);
+    }
+  };
   const completed = Object.values(progress.completedTopics).filter(t => t?.completed).length;
   const attempted = Object.values(progress.completedTopics).filter(t => t).length;
   const totalPoints = Object.values(progress.completedTopics).reduce(
@@ -20,6 +46,7 @@ export function Dashboard({ progress, reset, totalTopics, onJumpTo }) {
     { label: 'Themen begonnen', value: attempted, icon: Target, color: 'text-cyan-400' },
     { label: 'Trefferquote', value: `${accuracy}%`, icon: Zap, color: 'text-amber-400' },
     { label: 'Quizzes bestanden', value: progress.totalQuizzesPassed, icon: Award, color: 'text-fuchsia-400' },
+    { label: 'Tage-Streak', value: progress.studyStreakDays, icon: Flame, color: 'text-orange-400' },
   ];
 
   return (
@@ -34,7 +61,7 @@ export function Dashboard({ progress, reset, totalTopics, onJumpTo }) {
         </p>
       </header>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4">
         {stats.map((s) => {
           const Icon = s.icon;
           return (
@@ -111,7 +138,26 @@ export function Dashboard({ progress, reset, totalTopics, onJumpTo }) {
         </div>
       </section>
 
-      <div className="border-t border-zinc-800 pt-6">
+      <div className="border-t border-zinc-800 pt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+        <button
+          onClick={handleExport}
+          className="text-xs text-zinc-500 hover:text-cyan-300 transition-colors flex items-center gap-1.5"
+        >
+          <Download className="w-3 h-3" /> Fortschritt exportieren (JSON)
+        </button>
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          className="text-xs text-zinc-500 hover:text-cyan-300 transition-colors flex items-center gap-1.5"
+        >
+          <Upload className="w-3 h-3" /> Fortschritt importieren
+        </button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="application/json,.json"
+          onChange={handleImportFile}
+          className="hidden"
+        />
         <button
           onClick={() => { if (confirm('Wirklich allen Fortschritt zurücksetzen?')) reset(); }}
           className="text-xs text-zinc-600 hover:text-red-400 transition-colors flex items-center gap-1.5"

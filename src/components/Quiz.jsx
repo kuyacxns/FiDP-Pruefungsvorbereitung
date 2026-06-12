@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Check, X, Lightbulb, RotateCcw } from './Icons.jsx';
 import { buildShuffledQuizView } from '../lib/shuffle.js';
 import { applyQuizAnswers } from '../lib/leitner.js';
+import { withStudyActivity } from '../lib/streak.js';
 
 export function Quiz({ topic, progress, save }) {
   const stored = progress.quizAnswers[topic.id] || {};
@@ -29,7 +30,13 @@ export function Quiz({ topic, progress, save }) {
     const correctCount = topic.quiz.reduce(
       (acc, q, i) => acc + (answers[i] === q.correct ? 1 : 0), 0
     );
-    save({
+    const passed = correctCount === topic.quiz.length;
+    // passedTopics merkt sich jedes bestandene Thema dauerhaft, damit
+    // totalQuizzesPassed pro Thema höchstens einmal zählt.
+    const passedTopics = passed
+      ? { ...progress.passedTopics, [topic.id]: true }
+      : progress.passedTopics;
+    save(withStudyActivity({
       ...progress,
       quizAnswers: { ...progress.quizAnswers, [topic.id]: answers },
       questionStats: applyQuizAnswers(progress.questionStats, topic.id, topic.quiz, answers),
@@ -38,12 +45,12 @@ export function Quiz({ topic, progress, save }) {
         [topic.id]: {
           correctCount,
           totalQuestions: topic.quiz.length,
-          completed: correctCount === topic.quiz.length,
+          completed: passed,
         },
       },
-      totalQuizzesPassed: progress.totalQuizzesPassed + (correctCount === topic.quiz.length ? 1 : 0),
-      lastStudyDate: new Date().toISOString(),
-    });
+      passedTopics,
+      totalQuizzesPassed: Object.keys(passedTopics).length,
+    }));
   };
 
   const handleRetry = () => {
