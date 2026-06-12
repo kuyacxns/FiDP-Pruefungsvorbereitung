@@ -7,11 +7,13 @@ import { LearningPlanView } from './components/LearningPlanView.jsx';
 import { ResourcesView } from './components/ResourcesView.jsx';
 import { ReviewView } from './components/ReviewView.jsx';
 import { ExamView } from './components/ExamView.jsx';
+import { CalcView } from './components/CalcView.jsx';
 
 const TABS = [
   { id: 'home', label: 'Start' },
   { id: 'review', label: 'Wiederholen' },
   { id: 'simulation', label: 'Simulation' },
+  { id: 'rechnen', label: 'Rechnen' },
   { id: 'plan', label: 'Lernplan' },
   { id: 'ap1', label: 'AP1' },
   { id: 'ap2-prozess', label: 'AP2 · Prozesse' },
@@ -73,6 +75,7 @@ export default function App() {
         {tab === 'home' && <Dashboard progress={progress} reset={reset} totalTopics={totalTopics} onJumpTo={setTab} />}
         {tab === 'review' && <ReviewView progress={progress} save={save} />}
         {tab === 'simulation' && <ExamView progress={progress} save={save} />}
+        {tab === 'rechnen' && <CalcView />}
         {tab === 'plan' && <LearningPlanView />}
         {tab === 'ap1' && (
           <SectionView
