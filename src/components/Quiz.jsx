@@ -1,20 +1,25 @@
 import { useState, useEffect } from 'react';
 import { Check, X, Lightbulb, RotateCcw } from './Icons.jsx';
+import { buildShuffledQuizView } from '../lib/shuffle.js';
 
 export function Quiz({ topic, progress, save }) {
   const stored = progress.quizAnswers[topic.id] || {};
+  // answers ist immer mit Original-Frage-Index → Original-Options-Index belegt,
+  // unabhängig von der gemischten Darstellungsreihenfolge.
   const [answers, setAnswers] = useState(stored);
   const [submitted, setSubmitted] = useState(Object.keys(stored).length === topic.quiz.length);
+  const [view, setView] = useState(() => buildShuffledQuizView(topic.quiz));
 
   useEffect(() => {
     const s = progress.quizAnswers[topic.id] || {};
     setAnswers(s);
     setSubmitted(Object.keys(s).length === topic.quiz.length);
+    setView(buildShuffledQuizView(topic.quiz));
   }, [topic.id]);
 
-  const handleSelect = (qIdx, optIdx) => {
+  const handleSelect = (qIndex, oIndex) => {
     if (submitted) return;
-    setAnswers((prev) => ({ ...prev, [qIdx]: optIdx }));
+    setAnswers((prev) => ({ ...prev, [qIndex]: oIndex }));
   };
 
   const handleSubmit = () => {
@@ -42,6 +47,7 @@ export function Quiz({ topic, progress, save }) {
   const handleRetry = () => {
     setAnswers({});
     setSubmitted(false);
+    setView(buildShuffledQuizView(topic.quiz));
     save({
       ...progress,
       quizAnswers: { ...progress.quizAnswers, [topic.id]: {} },
@@ -55,18 +61,18 @@ export function Quiz({ topic, progress, save }) {
 
   return (
     <div className="space-y-6">
-      {topic.quiz.map((q, qIdx) => {
-        const selected = answers[qIdx];
+      {view.map((v, pos) => {
+        const selected = answers[v.qIndex];
         return (
-          <div key={qIdx} className="border border-zinc-800 rounded-lg p-4 sm:p-5 bg-zinc-950/50">
+          <div key={v.qIndex} className="border border-zinc-800 rounded-lg p-4 sm:p-5 bg-zinc-950/50">
             <div className="flex items-start gap-3 mb-4">
-              <span className="text-cyan-400 font-mono text-sm pt-0.5">{String(qIdx + 1).padStart(2, '0')}</span>
-              <p className="text-zinc-100 leading-relaxed font-medium flex-1">{q.q}</p>
+              <span className="text-cyan-400 font-mono text-sm pt-0.5">{String(pos + 1).padStart(2, '0')}</span>
+              <p className="text-zinc-100 leading-relaxed font-medium flex-1">{v.q}</p>
             </div>
             <div className="space-y-2 sm:ml-8">
-              {q.options.map((opt, optIdx) => {
-                const isSelected = selected === optIdx;
-                const isCorrect = optIdx === q.correct;
+              {v.options.map((opt, optPos) => {
+                const isSelected = selected === opt.oIndex;
+                const isCorrect = opt.oIndex === v.correct;
                 let style = 'border-zinc-800 hover:border-zinc-600 hover:bg-zinc-900/50 cursor-pointer';
                 if (submitted) {
                   if (isCorrect) style = 'border-emerald-700 bg-emerald-950/40 text-emerald-100';
@@ -77,13 +83,13 @@ export function Quiz({ topic, progress, save }) {
                 }
                 return (
                   <button
-                    key={optIdx}
-                    onClick={() => handleSelect(qIdx, optIdx)}
+                    key={opt.oIndex}
+                    onClick={() => handleSelect(v.qIndex, opt.oIndex)}
                     disabled={submitted}
                     className={`w-full text-left px-3 sm:px-4 py-2.5 border rounded transition-all duration-200 flex items-center gap-3 ${style}`}
                   >
-                    <span className="font-mono text-xs opacity-60 w-4">{String.fromCharCode(65 + optIdx)}</span>
-                    <span className="flex-1 text-sm">{opt}</span>
+                    <span className="font-mono text-xs opacity-60 w-4">{String.fromCharCode(65 + optPos)}</span>
+                    <span className="flex-1 text-sm">{opt.text}</span>
                     {submitted && isCorrect && <Check className="w-4 h-4 text-emerald-400 flex-shrink-0" />}
                     {submitted && isSelected && !isCorrect && <X className="w-4 h-4 text-red-400 flex-shrink-0" />}
                   </button>
@@ -95,7 +101,7 @@ export function Quiz({ topic, progress, save }) {
                 <div className="flex gap-2 text-xs text-cyan-400 font-mono mb-1 uppercase tracking-wider">
                   <Lightbulb className="w-3.5 h-3.5" /> Erklärung
                 </div>
-                <p className="text-sm text-zinc-300 leading-relaxed">{q.explanation}</p>
+                <p className="text-sm text-zinc-300 leading-relaxed">{v.explanation}</p>
               </div>
             )}
           </div>
