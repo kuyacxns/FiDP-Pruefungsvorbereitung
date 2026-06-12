@@ -1,18 +1,51 @@
+import { questionId } from './leitner.js';
+
 export const STORAGE_KEY = 'fidp_progress_v1';
+export const SCHEMA_VERSION = 2;
 
 export const defaultProgress = {
+  version: SCHEMA_VERSION,
   completedTopics: {},
   quizAnswers: {},
+  questionStats: {},
   studyStreakDays: 0,
   lastStudyDate: null,
   totalQuizzesPassed: 0,
 };
 
-export function loadProgress() {
+// Überführt alte Fortschrittsdaten (v1, ohne questionStats) ins aktuelle
+// Schema. Vorhandene Quiz-Antworten werden als initiale Leitner-Statistik
+// übernommen: richtig beantwortet → Box 2, falsch → Box 1.
+export function migrateProgress(raw, allTopics = []) {
+  const p = { ...defaultProgress, ...raw };
+  if (!raw || raw.version >= SCHEMA_VERSION) return p;
+
+  const questionStats = { ...p.questionStats };
+  const answeredAt = p.lastStudyDate || new Date().toISOString();
+  for (const topic of allTopics) {
+    const answers = p.quizAnswers?.[topic.id];
+    if (!answers) continue;
+    for (let i = 0; i < topic.quiz.length; i++) {
+      if (answers[i] === undefined) continue;
+      const qid = questionId(topic.id, i);
+      if (questionStats[qid]) continue;
+      const isCorrect = answers[i] === topic.quiz[i].correct;
+      questionStats[qid] = {
+        box: isCorrect ? 2 : 1,
+        correct: isCorrect ? 1 : 0,
+        wrong: isCorrect ? 0 : 1,
+        lastAnswered: answeredAt,
+      };
+    }
+  }
+  return { ...p, questionStats, version: SCHEMA_VERSION };
+}
+
+export function loadProgress(allTopics = []) {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return defaultProgress;
-    return { ...defaultProgress, ...JSON.parse(raw) };
+    return migrateProgress(JSON.parse(raw), allTopics);
   } catch {
     return defaultProgress;
   }

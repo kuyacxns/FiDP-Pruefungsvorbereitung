@@ -1,7 +1,10 @@
 import { ProgressBar } from './ProgressBar.jsx';
 import { Trophy, Target, Zap, Award, Clock, AlertCircle, RotateCcw } from './Icons.jsx';
+import { ALL_TOPICS } from '../data/index.js';
+import { getDueQuestions } from '../lib/leitner.js';
 
 export function Dashboard({ progress, reset, totalTopics, onJumpTo }) {
+  const dueCount = getDueQuestions(progress.questionStats, ALL_TOPICS).length;
   const completed = Object.values(progress.completedTopics).filter(t => t?.completed).length;
   const attempted = Object.values(progress.completedTopics).filter(t => t).length;
   const totalPoints = Object.values(progress.completedTopics).reduce(
@@ -45,6 +48,26 @@ export function Dashboard({ progress, reset, totalTopics, onJumpTo }) {
       </div>
 
       <ProgressBar value={completed} max={totalTopics} />
+
+      {dueCount > 0 && (
+        <button
+          onClick={() => onJumpTo('review')}
+          className="w-full text-left border border-cyan-800/60 bg-gradient-to-br from-cyan-950/40 to-zinc-950 hover:from-cyan-950/60 rounded-lg p-4 sm:p-5 flex items-center gap-4 transition-all group"
+        >
+          <div className="p-2.5 rounded-md bg-cyan-900/40 text-cyan-300 flex-shrink-0">
+            <Zap className="w-5 h-5" />
+          </div>
+          <div className="flex-1">
+            <div className="font-serif text-lg text-zinc-100 group-hover:text-cyan-200 transition-colors">
+              {dueCount} {dueCount === 1 ? 'Frage' : 'Fragen'} fällig
+            </div>
+            <div className="text-xs text-zinc-400">
+              Wiederholung nach dem Leitner-System – übe gezielt deine Schwächen.
+            </div>
+          </div>
+          <span className="font-mono text-xs uppercase tracking-wider text-cyan-400">Wiederholen →</span>
+        </button>
+      )}
 
       <section className="grid md:grid-cols-2 gap-4">
         <div className="border border-zinc-800 rounded-lg p-5 bg-gradient-to-br from-cyan-950/30 to-zinc-950">

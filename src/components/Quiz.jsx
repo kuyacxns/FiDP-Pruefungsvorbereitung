@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Check, X, Lightbulb, RotateCcw } from './Icons.jsx';
 import { buildShuffledQuizView } from '../lib/shuffle.js';
+import { applyQuizAnswers } from '../lib/leitner.js';
 
 export function Quiz({ topic, progress, save }) {
   const stored = progress.quizAnswers[topic.id] || {};
@@ -31,6 +32,7 @@ export function Quiz({ topic, progress, save }) {
     save({
       ...progress,
       quizAnswers: { ...progress.quizAnswers, [topic.id]: answers },
+      questionStats: applyQuizAnswers(progress.questionStats, topic.id, topic.quiz, answers),
       completedTopics: {
         ...progress.completedTopics,
         [topic.id]: {

@@ -5,9 +5,11 @@ import { Dashboard } from './components/Dashboard.jsx';
 import { SectionView } from './components/SectionView.jsx';
 import { LearningPlanView } from './components/LearningPlanView.jsx';
 import { ResourcesView } from './components/ResourcesView.jsx';
+import { ReviewView } from './components/ReviewView.jsx';
 
 const TABS = [
   { id: 'home', label: 'Start' },
+  { id: 'review', label: 'Wiederholen' },
   { id: 'plan', label: 'Lernplan' },
   { id: 'ap1', label: 'AP1' },
   { id: 'ap2-prozess', label: 'AP2 · Prozesse' },
@@ -67,6 +69,7 @@ export default function App() {
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {tab === 'home' && <Dashboard progress={progress} reset={reset} totalTopics={totalTopics} onJumpTo={setTab} />}
+        {tab === 'review' && <ReviewView progress={progress} save={save} />}
         {tab === 'plan' && <LearningPlanView />}
         {tab === 'ap1' && (
           <SectionView
